@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+  web:
+    build: .
+    #command: uvicorn app.main:app --host 0.0.0.0 --port 8050
+    ports:
+      - "8050:8050"
+    
+    volumes:
+      - ./app:/code/app
+      - ./DB:/code/DB
+    networks:
+      - app-network
+
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/certificate.pem:/etc/ssl/certs/certificate.pem
+      - ./nginx/key.pem:/etc/ssl/certs/key.pem
+    ports:
+      # - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+    networks:
+      - app-network
+
+  ngrok-pv:
+    image: wernight/ngrok
+    container_name: ngrok_pv
+    environment:
+      - NGROK_AUTHTOKEN=2gvZgq8QeMh7QRSy16W5tqB9hH8_3535jpc9zV3bcuHZKZx8K
+      - NGROK_REGION=us
+      - NGROK_CONFIG=/ngrok.yml
+    ports:
+      - "4040:4040" # Panel web de ngrok
+    depends_on:
+      - nginx
+    networks:
+      - app-network
+    command: ngrok http nginx:443
+
+
+
+networks:
+  app-network:
+    driver: bridge

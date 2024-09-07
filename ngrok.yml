@@ -1,0 +1,7 @@
+version: "2"
+authtoken: 2gvZgq8QeMh7QRSy16W5tqB9hH8_3535jpc9zV3bcuHZKZx8K
+region: us
+tunnels:
+  web:
+    proto: http
+    addr: nginx:443
