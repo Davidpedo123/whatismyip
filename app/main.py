@@ -27,8 +27,7 @@ async def get_client_ip(request: Request):
     file_name = "IP2LOCATION-LITE-DB3.BIN"
     file_path = os.path.join(directory, file_name)
     """
-    database = IP2Location.IP2Location('IP2LOCATION-LITE-DB3.BIN')
+    database = IP2Location.IP2Location('./app/IP2LOCATION-LITE-DB3.BIN')
     rec = database.get_all(client_ip)
     return templates.TemplateResponse("index.html", {"request": request, "client_ip": client_ip, "rec": rec})
-
 
