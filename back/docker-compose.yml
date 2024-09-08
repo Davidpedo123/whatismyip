@@ -1,32 +1,34 @@
 version: "3.8"
 services:
-  web-back:
-    build: ./back/
+  web:
+    build: .
     command: uvicorn app.main:app --host 0.0.0.0 --port 8050
     ports:
       - "8050:8050"
+    
     volumes:
-      - ./back/app:/code/app
-      - ./back/DB:/code/DB
+      - ./app:/code/app
+      - ./DB:/code/DB
     networks:
       - app-network
+
 
   nginx:
     image: nginx:latest
     volumes:
-      - ./back/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./back//nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - ./back/nginx/certificate.pem:/etc/ssl/certs/certificate.pem
-      - ./back/nginx/key.pem:/etc/ssl/certs/key.pem
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/certificate.pem:/etc/ssl/certs/certificate.pem
+      - ./nginx/key.pem:/etc/ssl/certs/key.pem
     ports:
-      # - "80:80"  # Puedes descomentar esta línea si necesitas soporte HTTP además de HTTPS
+      # - "80:80"
       - "443:443"
     depends_on:
-      - web-back
+      - web
     networks:
       - app-network
 
-  ngrok:
+  ngrok-pv:
     image: wernight/ngrok
     container_name: ngrok_pv
     environment:
@@ -41,14 +43,7 @@ services:
       - app-network
     command: ngrok http nginx:443
 
-  web-front:
-    build: ./front/
-    ports:
-      - "4200:4200"
-    volumes:
-      - ./front:/code/front/
-    networks:
-      - app-network
+
 
 networks:
   app-network:
