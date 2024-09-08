@@ -28,7 +28,6 @@ services:
 
   ngrok:
     image: wernight/ngrok
-    container_name: ngrok_pv
     environment:
       - NGROK_AUTHTOKEN=2gvZgq8QeMh7QRSy16W5tqB9hH8_3535jpc9zV3bcuHZKZx8K
       - NGROK_REGION=us

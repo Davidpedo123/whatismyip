@@ -16,4 +16,4 @@ def test_search_ip(url, ip_address):
         return "Error: No se pudo establecer la comunicacion"
 
 # Ejemplo de uso
-print(test_search_ip("http://localhost:8050", "8.8.8.8"))
+print(test_search_ip("http://web-back:8050", "8.8.8.8"))
