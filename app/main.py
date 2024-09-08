@@ -27,7 +27,29 @@ async def get_client_ip(request: Request):
     file_name = "IP2LOCATION-LITE-DB3.BIN"
     file_path = os.path.join(directory, file_name)
     """
-    database = IP2Location.IP2Location('./app/IP2LOCATION-LITE-DB3.BIN')
-    rec = database.get_all(client_ip)
+    if len(client_ip) > 15:
+        database = IP2Location.IP2Location('./app/DB1_IP6.BIN')
+        rec = database.get_all(client_ip)
+        print("base de dato ip6")
+    else:
+        database = IP2Location.IP2Location('./app/IP2LOCATION-LITE-DB3.BIN')
+        rec = database.get_all(client_ip)
+        print(database)
+        print("base de dato ip4")
+        
     return templates.TemplateResponse("index.html", {"request": request, "client_ip": client_ip, "rec": rec})
 
+@app.get("/get-ip")
+async def get_client_ip(request: Request, ip: str):
+    if len(ip) > 15:
+        database = IP2Location.IP2Location('./app/DB1_IP6.BIN')
+        rec = database.get_all(ip)
+        print("base de dato ip6")
+
+    else:
+        database = IP2Location.IP2Location('./app/IP2LOCATION-LITE-DB3.BIN')
+        rec = database.get_all(ip)
+        print(database)
+        print("base de dato ip4")
+
+    return {"ip": rec}
