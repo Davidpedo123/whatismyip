@@ -43,6 +43,12 @@ services:
       - app-network
     command: ngrok http nginx:443
 
+  jeankis:
+    image: jenkins:latest
+    container_name: CI-CD-ADMIN
+    ports: 
+      - "9090:8080"
+      - "50000:50000"
 
 
 networks:

@@ -1,10 +1,9 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.templating import Jinja2Templates
 from starlette.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 import IP2Location
 import os
-
 
 app = FastAPI()
 
@@ -12,8 +11,16 @@ app = FastAPI()
 templates = Jinja2Templates(directory="app/template")
 app.mount("/asset", StaticFiles(directory="app/asset"), name="asset")
 
+def check_invalid_ip(rec):
+    """Verifica si hay un valor de IP inválido en el diccionario."""
+    for key, value in rec.items():
+        if "INVALID IP ADDRESS" in value:
+            raise HTTPException(status_code=400, detail="Invalid IP address value in the record")
+        elif "-" in value:
+            raise HTTPException(status_code=404, detail="Resource not found")
+
 @app.get("/", response_class=HTMLResponse)
-async def get_client_ip(request: Request):
+async def home(request: Request):
     client_ip = request.client.host  # Captura la IP del cliente
 
     # Verifica si hay un encabezado 'X-Forwarded-For' para capturar la IP real detrás de un proxy
@@ -21,35 +28,63 @@ async def get_client_ip(request: Request):
     if forwarded_for:
         client_ip = forwarded_for.split(',')[0].strip()  # La primera IP es la real en caso de múltiples proxies
     
-    # Renderiza el template HTML pasando la IP como contexto
     print(client_ip)
-    """directory = "../DB/DB_IPV4/DB1"
-    file_name = "IP2LOCATION-LITE-DB3.BIN"
-    file_path = os.path.join(directory, file_name)
-    """
-    if len(client_ip) > 15:
-        database = IP2Location.IP2Location('./app/DB1_IP6.BIN')
-        rec = database.get_all(client_ip)
-        print("base de dato ip6")
-    else:
-        database = IP2Location.IP2Location('./app/IP2LOCATION-LITE-DB3.BIN')
-        rec = database.get_all(client_ip)
-        print(database)
-        print("base de dato ip4")
+    
+    try:
+        if len(client_ip) > 15:
+            # Base de datos para IPs IPv6
+            database = IP2Location.IP2Location('./app/DB1_IP6.BIN')
+            rec = database.get_all(client_ip).__dict__
+            
+            # Verificar valores inválidos
+            check_invalid_ip(rec)
+            
+            print("Base de datos IP6")
+        else:
+            # Base de datos para IPs IPv4
+            database = IP2Location.IP2Location('./app/IP2LOCATION-LITE-DB3.BIN')
+            rec = database.get_all(client_ip).__dict__
+            
+            print("Base de datos IP4")
         
+    except HTTPException as e:
+        # Manejar excepciones específicas
+        raise e
+    except Exception as e:
+        # Manejar otros errores generales
+        print(f"Error: {e}")  # Opcional, para depuración
+        raise HTTPException(status_code=404, detail="Resource not found")
+
     return templates.TemplateResponse("index.html", {"request": request, "client_ip": client_ip, "rec": rec})
 
 @app.get("/get-ip")
-async def get_client_ip(request: Request, ip: str):
-    if len(ip) > 15:
-        database = IP2Location.IP2Location('./app/DB1_IP6.BIN')
-        rec = database.get_all(ip)
-        print("base de dato ip6")
-
-    else:
-        database = IP2Location.IP2Location('./app/IP2LOCATION-LITE-DB3.BIN')
-        rec = database.get_all(ip)
-        print(database)
-        print("base de dato ip4")
-
+async def get_ip(request: Request, ip: str):
+    try:
+        if len(ip) > 15:
+            # Base de datos para IPs IPv6
+            database = IP2Location.IP2Location('./app/DB1_IP6.BIN')
+            rec = database.get_all(ip).__dict__
+            
+            # Verificar valores inválidos
+            check_invalid_ip(rec)
+            
+            print("Base de datos IP6")
+        else:
+            # Base de datos para IPs IPv4
+            database = IP2Location.IP2Location('./app/IP2LOCATION-LITE-DB3.BIN')
+            rec = database.get_all(ip).__dict__
+            
+            # Verificar valores inválidos
+            check_invalid_ip(rec)
+            
+            print("Base de datos IP4")
+    
+    except HTTPException as e:
+        # Manejar excepciones específicas
+        raise e
+    except Exception as e:
+        # Manejar otros errores generales
+        print(f"Error: {e}")  # Opcional, para depuración
+        raise HTTPException(status_code=404, detail="Resource not found")
+    
     return {"ip": rec}

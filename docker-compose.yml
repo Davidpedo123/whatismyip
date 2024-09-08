@@ -50,6 +50,13 @@ services:
     networks:
       - app-network
 
+  jeankis:
+    image: jenkins/jenkins:lts
+    container_name: CI-CD-ADMIN
+    ports: 
+      - "9090:8080"
+      - "50000:50000"
+
 networks:
   app-network:
     driver: bridge
