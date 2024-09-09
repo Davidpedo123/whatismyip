@@ -3,6 +3,7 @@ MAINTAINER Michael J. Stealey <michael.j.stealey@gmail.com>
 
 # add ability to run docker from within jenkins (docker in docker)
 USER root
+RUN apt-get install git
 RUN apt-get update && apt-get install -y lsb-release sudo
 RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
   https://download.docker.com/linux/debian/gpg
@@ -21,7 +22,6 @@ ENV JENKINS_UID=1000
 ENV JENKINS_GID=1000
 
 # add entrypoint script
-COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 # normally user would be set to jenkins, but this is handled by the docker-entrypoint script on startup
 #USER jenkins

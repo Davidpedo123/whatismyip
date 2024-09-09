@@ -35,8 +35,8 @@ async def github_webhook(x_github_token: str = Header(None)):
 
 
 # Configura la carpeta donde estarán tus templates de Jinja2
-templates = Jinja2Templates(directory="app/template")
-app.mount("/asset", StaticFiles(directory="app/asset"), name="asset")
+templates = Jinja2Templates(directory="template")
+#app.mount("/asset", StaticFiles(directory="asset"), name="asset")
 
 def check_invalid_ip(rec):
     """Verifica si hay un valor de IP inválido en el diccionario."""
