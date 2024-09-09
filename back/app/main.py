@@ -4,8 +4,35 @@ from starlette.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 import IP2Location
 import os
+from fastapi import FastAPI, Header, HTTPException, status
+
 
 app = FastAPI()
+
+token = os.environ['TOKEN_GITHUB']
+# Define un token estático que GitHub debe enviar
+GITHUB_TOKEN = token
+
+# Verifica si el token en las solicitudes es válido
+def verify_github_token(token: str):
+    if token != GITHUB_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token inválido",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+@app.post("/auth")
+async def github_webhook(x_github_token: str = Header(None)):
+    # Verifica el token
+    verify_github_token(x_github_token)
+    
+    # Aquí procesarías el evento de GitHub
+    return {"message": "Solicitud válida de GitHub"}
+
+
+
+
 
 # Configura la carpeta donde estarán tus templates de Jinja2
 templates = Jinja2Templates(directory="app/template")
@@ -88,3 +115,6 @@ async def get_ip(request: Request, ip: str):
         raise HTTPException(status_code=404, detail="Resource not found")
     
     return {"ip": rec}
+
+
+
