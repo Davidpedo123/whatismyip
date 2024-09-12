@@ -8,7 +8,7 @@ import { IpInfo } from './ip.model';
     providedIn: 'root'  
 })  
 export class IpService {  
-    private apiUrl = 'https://localhost/get-ip'; // Cambia esto por la URL de tu API  
+    private apiUrl = 'http://nginx:80/get-ip'; // Cambia esto por la URL de tu API  
 
     constructor(private http: HttpClient) {}  
 
