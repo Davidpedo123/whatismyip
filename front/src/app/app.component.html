@@ -24,15 +24,15 @@
         <span>Search</span>
       </button>
     </form>
-  <h4>TU IP</h4>
-  <p>client_ip</p>
-  <p>INFORMACION</p>
-  <ol>
-    <li>SIGLAS PAIS: {rec.country_short}</li>
-    <li>PAIS: rec.country_long</li>
-    <li>REGION: rec.region</li>
-    <li>CITY: rec.city</li>
-  </ol>
+    <h4>TU IP</h4>  
+    <p>{{ ipInfo?.clientIp }}</p>  
+    <p>INFORMACION</p>  
+    <ol>  
+        <li>SIGLAS PAIS: {{ ipInfo?.countryShort }}</li>  
+        <li>PAIS: {{ ipInfo?.countryLong }}</li>  
+        <li>REGION: {{ ipInfo?.region }}</li>  
+        <li>CITY: {{ ipInfo?.city }}</li>  
+    </ol>
   </main>
 </body>
 </html>

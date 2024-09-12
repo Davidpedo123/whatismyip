@@ -1,12 +1,28 @@
 from fastapi import FastAPI, Request, HTTPException
 from starlette.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 import IP2Location
 import os
 from fastapi import FastAPI, Header, HTTPException, status
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
+
+app.add_middleware(
+    TrustedHostMiddleware,
+    allowed_hosts=["*"],
+)
+
 
 token = os.environ['TOKEN_GITHUB']
 # Define un token estático que GitHub debe enviar

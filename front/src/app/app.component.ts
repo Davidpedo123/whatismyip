@@ -1,14 +1,26 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
+import { Component, OnInit } from '@angular/core';
+import { IpService } from './ip.service';
+import { IpInfo } from './ip.model';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'whatismyip-front';
+export class AppComponent implements OnInit {
+    ipInfo: IpInfo | null = null;
+
+    constructor(private ipService: IpService) {}
+
+    ngOnInit(): void {
+        const ipToFetch = '8.8.8.8';
+        this.ipService.getIpInfo(ipToFetch).subscribe(
+            (data: IpInfo) => {
+                this.ipInfo = data;
+            },
+            (error) => {
+                console.error('Error fetching IP info:', error);
+            }
+        );
+    }
 }
