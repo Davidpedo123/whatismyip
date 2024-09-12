@@ -13,8 +13,6 @@ export class IpService {
     constructor(private http: HttpClient) {}  
 
     getIpInfo(ip: string): Observable<IpInfo> {  
-        const url = `${this.apiUrl}?ip=${ip}`; // Construye la URL con el parámetro IP  
-        console.log(url)
-        return this.http.get<IpInfo>(url);  
+        return this.http.get<IpInfo>(`${this.apiUrl}?ip=${ip}`);  
     }  
 }
