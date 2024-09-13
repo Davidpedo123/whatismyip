@@ -15,8 +15,8 @@ services:
   
   web-front:
     build: ./front/
-    ports:
-      - "4200:4200"
+    expose:
+      - "4200"
     volumes:
       - ./front:/code/front/
     networks:
@@ -51,8 +51,6 @@ services:
       - NGROK_AUTHTOKEN=2gvZgq8QeMh7QRSy16W5tqB9hH8_3535jpc9zV3bcuHZKZx8K
       - NGROK_REGION=us
       - NGROK_CONFIG=/ngrok.yml
-    ports:
-      - "4040:4040" # Panel web de ngrok
     depends_on:
       - nginx
     networks:

@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { IpService } from './ip.service';
 import { IpInfo } from './ip.model';
+import * as publicIp  from 'public-ip';
 
 @Component({
     selector: 'app-root',
@@ -13,17 +14,17 @@ export class AppComponent implements OnInit {
     constructor(private ipService: IpService, private cdr: ChangeDetectorRef) {}
 
     ngOnInit(): void {
-        const ipToFetch = '8.8.8.8';
-
-        this.ipService.getIpInfo(ipToFetch).subscribe(
-            (data: IpInfo) => {
-                this.ipInfo = data;
-                console.log(data)
-                this.cdr.markForCheck(); // Forzar la detección de cambios
-            },
-            (error) => {
-                console.error('Error fetching IP info:', error);
-            }
-        );
+        publicIp.publicIpv4().then((ip)=>{
+            this.ipService.getIpInfo(ip).subscribe(
+                (data: IpInfo) => {
+                    this.ipInfo = data;
+                    console.log(data)
+                    this.cdr.markForCheck(); // Forzar la detección de cambios
+                },
+                (error) => {
+                    console.error('Error fetching IP info:', error);
+                }
+            );
+        })
     }
 }
