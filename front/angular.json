@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "front": {
+    "whatismyip-front": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/front",
+            "outputPath": "dist/whatismyip-front",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -64,10 +64,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "front:build:production"
+              "buildTarget": "whatismyip-front:build:production"
             },
             "development": {
-              "buildTarget": "front:build:development"
+              "buildTarget": "whatismyip-front:build:development"
             }
           },
           "defaultConfiguration": "development"
