@@ -18,6 +18,7 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
+  /*
   server.use(cors());
   server.get('/get-ip', (req, res) => {
     try {
@@ -28,7 +29,7 @@ export function app(): express.Express {
       console.error('Error fetching client IP:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
-  });
+  });*/
 
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
@@ -41,6 +42,7 @@ export function app(): express.Express {
   // All regular routes use the Angular engine
   server.get('**', (req, res, next) => {
     const { protocol, originalUrl, baseUrl, headers } = req;
+
     commonEngine
       .render({
         bootstrap,
@@ -50,15 +52,13 @@ export function app(): express.Express {
         providers: [{ provide: APP_BASE_HREF, useValue: baseUrl }],
       })
       .then((html) => res.send(html))
-      .catch((err) => {
-        console.error('Rendering error:', err);
-        next(err);
-      });
+      .catch((err) => next(err));
   });
+  /*
   server.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.error('Unhandled error:', err);
     res.status(500).send('Something broke!');
-  });
+  });*/
   
 
   return server;
